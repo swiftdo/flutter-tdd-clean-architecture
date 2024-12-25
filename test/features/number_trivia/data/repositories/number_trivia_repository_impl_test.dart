@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:my_flutter_app/core/error/expection.dart';
+import 'package:my_flutter_app/core/error/exception.dart';
 import 'package:my_flutter_app/core/error/failure.dart';
 import 'package:my_flutter_app/core/platform/network_info.dart';
 import 'package:my_flutter_app/features/number_trivia/data/datasources/number_trivia_local_data_source.dart';

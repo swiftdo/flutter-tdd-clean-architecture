@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:my_flutter_app/core/error/expection.dart';
+import 'package:my_flutter_app/core/error/exception.dart';
 
 import 'package:my_flutter_app/core/error/failure.dart';
 import 'package:my_flutter_app/features/number_trivia/data/models/number_trivia_model.dart';
@@ -11,7 +11,7 @@ import '../../domain/repositories/number_trivia_repository.dart';
 import '../datasources/number_trivia_local_data_source.dart';
 import '../datasources/number_trivia_remote_data_source.dart';
 
-typedef Future<NumberTriviaModel> _ConcreteOrRandomChooser();
+typedef _ConcreteOrRandomChooser = Future<NumberTriviaModel> Function();
 
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
