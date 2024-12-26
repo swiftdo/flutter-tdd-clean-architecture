@@ -21,6 +21,152 @@ Presentation 层：处理与用户界面的交互，如视图更新、页面跳�
 - [ ] 图片资源管理
 - [ ] 国际化
 
+## 各层职责
+在整洁架构（Clean Architecture）中，**领域层**、**数据层**和**展示层**各自承担着不同的职责，确保系统高内聚、低耦合并易于维护。以下是每一层的职责和作用：
+
+### **1. 领域层（Domain Layer）**
+
+#### **职责：**
+- **核心业务逻辑**：领域层是应用程序的心脏，负责实现应用的核心业务规则和领域模型。所有的复杂计算、业务流程、决策逻辑都应该在领域层进行处理。
+- **实体（Entities）**：定义应用程序中的核心数据对象和行为。例如，在电商应用中，`Product`、`Order` 可能是领域实体，包含与业务相关的属性和方法。
+- **用例（Use Cases）**：领域层定义了应用程序的用例，它们封装了应用的业务操作。例如，`CreateOrderUseCase`、`CalculateDiscountUseCase`，这些用例将由展示层调用，并与数据层交互。
+- **接口**：定义对外部服务（如数据源、API 等）的抽象接口，以保持与外部依赖的解耦。例如，`UserRepository` 接口可以定义数据层应提供的访问方法。
+
+#### **特点：**
+- **独立性**：领域层不依赖任何外部库、框架，甚至数据存储方式。它只包含业务逻辑。
+- **不与展示层和数据层耦合**：领域层仅通过接口与其他层交互，不关心如何获取或展示数据。
+
+#### **示例：**
+```dart
+// 领域实体
+class Order {
+  final int id;
+  final List<Product> products;
+  final double totalAmount;
+
+  Order(this.id, this.products, this.totalAmount);
+}
+
+// 用例
+class CalculateTotalAmountUseCase {
+  double execute(List<Product> products) {
+    return products.fold(0, (sum, product) => sum + product.price);
+  }
+}
+```
+
+---
+
+### **2. 数据层（Data Layer）**
+
+#### **职责：**
+- **数据获取与持久化**：数据层负责从外部数据源（如 API、数据库、本地存储等）获取和保存数据。
+- **数据转换**：数据层不仅负责获取数据，还需要负责将原始数据转换为领域层可使用的格式。比如，API 返回的数据可能是 JSON 格式，而领域层期望的是 `Order` 实体对象。
+- **实现存储接口**：数据层实现领域层定义的存储接口。例如，实现一个 `UserRepository` 接口，通过网络请求或数据库查询来获取用户数据。
+- **缓存处理**：在数据层中可以实现缓存策略，以减少不必要的网络请求或数据库查询，提高应用性能。
+
+#### **特点：**
+- **具体实现**：数据层直接与外部依赖（如数据库、网络、文件系统）进行交互，具体实现细节对领域层透明。
+- **解耦**：领域层定义的数据获取和存储接口，由数据层具体实现。这种方式保持了系统的灵活性和可扩展性。
+
+#### **示例：**
+```dart
+// 数据层接口
+abstract class UserRepository {
+  Future<User> getUser(int id);
+  Future<void> saveUser(User user);
+}
+
+// 数据层实现
+class UserRepositoryImpl implements UserRepository {
+  final ApiClient apiClient;
+
+  UserRepositoryImpl(this.apiClient);
+
+  @override
+  Future<User> getUser(int id) async {
+    final response = await apiClient.get('/users/$id');
+    return User.fromJson(response.data);
+  }
+
+  @override
+  Future<void> saveUser(User user) async {
+    await apiClient.post('/users', data: user.toJson());
+  }
+}
+```
+
+---
+
+### **3. 展示层（Presentation Layer）**
+
+#### **职责：**
+- **UI 展示与交互**：展示层负责渲染应用的用户界面，并处理用户与应用的交互。展示层通过调用领域层的用例来获取数据和执行操作。
+- **UI 逻辑与状态管理**：展示层管理 UI 状态的变化，如用户输入、数据加载、错误显示等。它可能会使用状态管理方案（如 `Provider`、`Bloc`、`Riverpod` 等）来响应业务逻辑的变化。
+- **用户操作的转发**：展示层接收用户的输入（如按钮点击、表单提交等），并将操作转发给领域层对应的用例处理。
+- **UI 组件化**：展示层通常包括不同的 UI 组件（如按钮、列表、对话框等）以及布局管理。每个组件负责其独立的 UI 展示。
+
+#### **特点：**
+- **解耦业务逻辑**：展示层不包含业务逻辑，它只关心如何展示数据。所有复杂的业务计算和操作都应通过领域层的用例来完成。
+- **状态驱动**：展示层的状态应由领域层返回的数据或者用例执行的结果来驱动。
+- **对外暴露 UI 组件**：展示层通常包含诸如视图模型（ViewModel）或者状态管理的工具，用于管理和协调数据流动。
+
+#### **示例：**
+```dart
+// 展示层：视图模型
+class UserViewModel with ChangeNotifier {
+  final GetUserUseCase _getUserUseCase;
+
+  User? _user;
+  User? get user => _user;
+
+  UserViewModel(this._getUserUseCase);
+
+  Future<void> loadUser(int id) async {
+    try {
+      _user = await _getUserUseCase.execute(id);
+      notifyListeners();
+    } catch (e) {
+      // 处理错误
+    }
+  }
+}
+
+// 展示层：UI 组件
+class UserProfilePage extends StatelessWidget {
+  final UserViewModel viewModel;
+
+  UserProfilePage(this.viewModel);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<UserViewModel>(
+      create: (_) => viewModel,
+      child: Consumer<UserViewModel>(
+        builder: (context, viewModel, child) {
+          if (viewModel.user == null) {
+            return CircularProgressIndicator();
+          }
+          return Text('Hello, ${viewModel.user!.name}');
+        },
+      ),
+    );
+  }
+}
+```
+
+---
+
+### **总结：**
+
+| **层级**      | **职责**                                               | **与其他层的关系**                                   |
+|---------------|--------------------------------------------------------|-----------------------------------------------------|
+| **领域层**    | - 负责核心业务逻辑<br>- 定义领域模型与用例<br>- 提供接口 | - 不依赖其他层，使用接口与数据层交互，展示层调用用例 |
+| **数据层**    | - 数据获取、持久化<br>- 数据转换与存储接口的实现       | - 实现领域层定义的接口，依赖领域层的接口           |
+| **展示层**    | - UI 展示与交互<br>- 状态管理与用户输入转发            | - 调用领域层的用例执行操作，展示结果               |
+
+通过整洁架构，领域层、数据层和展示层之间的职责是分离的，它们通过接口进行交互，使得系统易于扩展、测试和维护。展示层主要负责界面和用户交互，领域层处理业务逻辑，数据层则负责数据的持久化和网络通信。
+
 ## 参考
 
 - https://resocoder.com/tag/flutter/ 这个Flutter TDD Clean Architecture 系列的文章可以看下，
