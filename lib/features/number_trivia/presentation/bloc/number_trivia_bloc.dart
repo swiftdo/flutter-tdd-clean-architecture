@@ -26,10 +26,10 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
     required this.random,
     required this.inputConverter,
   }) : super(Empty()) {
-    on<GetTriviaForConcreteNumber>((event, emit) {
+    on<GetTriviaForConcreteNumber>((event, emit) async {
       final inputEither =
           inputConverter.stringToUnsignedInteger(event.numberString);
-      inputEither.fold(
+      await inputEither.fold(
         (failure) {
           emit(const StateError(message: INVALID_INPUT_FAILURE_MESSAGE));
         },

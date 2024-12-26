@@ -46,7 +46,7 @@ void main() {
     // This is the successful output of the InputConverter
     final tNumberParsed = int.parse(tNumberString);
     // NumberTrivia instance is needed too, of course
-    final tNumberTrivia = const NumberTrivia(number: 1, text: 'test trivia');
+    const tNumberTrivia = NumberTrivia(number: 1, text: 'test trivia');
 
     void setUpMockInputConverterSuccess() =>
         when(mockInputConverter.stringToUnsignedInteger(any))
