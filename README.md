@@ -2,7 +2,7 @@
 
 ![](https://i0.wp.com/resocoder.com/wp-content/uploads/2019/08/Clean-Architecture-Flutter-Diagram.png?w=556&ssl=1)
 
-![](https://developer.qcloudimg.com/http-save/yehe-170434/b7968ef5cb008703c5f42b0299c5974e.jpg)
+
 
 Core 层：提供全局的基础设施服务（如 NavigationService、Logger、ErrorHandler 等），其他层可以依赖于 Core 层，但 Core 层不依赖任何其他层。
 
@@ -25,6 +25,8 @@ Presentation 层：处理与用户界面的交互，如视图更新、页面跳�
 - https://resocoder.com/tag/flutter/ 这个Flutter TDD Clean Architecture 系列的文章可以看下，
 受益匪浅，思想性的东西通用性很强。
 - 整洁架构在前端的设计思想与应用实践：https://cloud.tencent.com/developer/article/2324905
+
+![](https://developer.qcloudimg.com/http-save/yehe-170434/b7968ef5cb008703c5f42b0299c5974e.jpg)
 
 ## feature
 
