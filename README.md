@@ -3,8 +3,11 @@
 ![](https://i0.wp.com/resocoder.com/wp-content/uploads/2019/08/Clean-Architecture-Flutter-Diagram.png?w=556&ssl=1)
 
 Core 层：提供全局的基础设施服务（如 NavigationService、Logger、ErrorHandler 等），其他层可以依赖于 Core 层，但 Core 层不依赖任何其他层。
+
 Domain 层：处理核心业务逻辑，如数据处理、验证、计算等。
+
 Data 层：处理数据访问、API 请求、数据库操作等。
+
 Presentation 层：处理与用户界面的交互，如视图更新、页面跳转、UI 逻辑等。路由控制通常在这一层进行，负责根据业务逻辑（可能由 Domain 层 提供）来触发页面跳转。
 
 
