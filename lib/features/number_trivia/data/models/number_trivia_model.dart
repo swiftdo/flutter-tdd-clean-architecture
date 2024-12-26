@@ -1,8 +1,12 @@
+import 'package:equatable/equatable.dart';
+
 import '../../domain/entities/number_trivia.dart';
 
 // TODO- 这里继承好么？
-class NumberTriviaModel extends NumberTrivia {
-  const NumberTriviaModel({required super.number, required super.text});
+class NumberTriviaModel extends Equatable {
+  final String text;
+  final int number;
+  const NumberTriviaModel({required this.number, required this.text});
 
   static fromJson(Map<String, dynamic> json) {
     return NumberTriviaModel(
@@ -17,4 +21,7 @@ class NumberTriviaModel extends NumberTrivia {
       'number': number,
     };
   }
+
+  @override
+  List<Object?> get props => [text, number];
 }

@@ -7,6 +7,7 @@ import 'package:my_flutter_app/core/error/failure.dart';
 import 'package:my_flutter_app/core/platform/network_info.dart';
 import 'package:my_flutter_app/features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'package:my_flutter_app/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
+import 'package:my_flutter_app/features/number_trivia/data/mapper/number_trivia_mapper.dart';
 import 'package:my_flutter_app/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:my_flutter_app/features/number_trivia/data/repositories/number_trivia_repository_impl.dart';
 import 'package:my_flutter_app/features/number_trivia/domain/entities/number_trivia.dart';
@@ -24,6 +25,8 @@ void main() {
   late MockNumberTriviaLocalDataSource mockLocalDataSource;
   late MockNumberTriviaRemoteDataSource mockRemoteDataSource;
   late MockNetworkInfo mockNetworkInfo;
+
+  final mapper = NumberTriviaMapper();
 
   void runTestsOnline(Function body) {
     group('device is online', () {
@@ -53,13 +56,14 @@ void main() {
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
       networkInfo: mockNetworkInfo,
+      mapper: mapper,
     );
   });
 
   const tNumber = 1;
   const tNumberTriviaModel =
       NumberTriviaModel(number: tNumber, text: 'test trivia');
-  const NumberTrivia tNumberTrivia = tNumberTriviaModel;
+  final NumberTrivia tNumberTrivia = mapper.toEntity(tNumberTriviaModel);
 
   group('getConcreteNumberTrivia', () {
     // DATA FOR THE MOCKS AND ASSERTIONS
@@ -85,7 +89,7 @@ void main() {
           final result = await repository.getConcreteNumberTrivia(tNumber);
           // assert
           verify(mockRemoteDataSource.getConcreteNumberTrivia(tNumber));
-          expect(result, equals(const Right(tNumberTrivia)));
+          expect(result, equals(Right(tNumberTrivia)));
         },
       );
 
@@ -131,7 +135,7 @@ void main() {
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getLastNumberTrivia());
-          expect(result, equals(const Right(tNumberTrivia)));
+          expect(result, equals(Right(tNumberTrivia)));
         },
       );
 
@@ -155,7 +159,7 @@ void main() {
   group('getRandomNumberTrivia', () {
     const tNumberTriviaModel =
         NumberTriviaModel(number: 123, text: 'test trivia');
-    const NumberTrivia tNumberTrivia = tNumberTriviaModel;
+    final NumberTrivia tNumberTrivia = mapper.toEntity(tNumberTriviaModel);
 
     test('should check if the device is online', () {
       //arrange
@@ -177,7 +181,7 @@ void main() {
           final result = await repository.getRandomNumberTrivia();
           // assert
           verify(mockRemoteDataSource.getRandomNumberTrivia());
-          expect(result, equals(const Right(tNumberTrivia)));
+          expect(result, equals(Right(tNumberTrivia)));
         },
       );
 
@@ -223,7 +227,7 @@ void main() {
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getLastNumberTrivia());
-          expect(result, equals(const Right(tNumberTrivia)));
+          expect(result, equals(Right(tNumberTrivia)));
         },
       );
 

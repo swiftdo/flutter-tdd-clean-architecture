@@ -10,6 +10,7 @@ import '../../../../core/platform/network_info.dart';
 import '../../domain/repositories/number_trivia_repository.dart';
 import '../datasources/number_trivia_local_data_source.dart';
 import '../datasources/number_trivia_remote_data_source.dart';
+import '../mapper/number_trivia_mapper.dart';
 
 typedef _ConcreteOrRandomChooser = Future<NumberTriviaModel> Function();
 
@@ -17,11 +18,13 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
   final NumberTriviaLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
+  final NumberTriviaMapper mapper;
 
   NumberTriviaRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
+    required this.mapper,
   });
 
   @override
@@ -47,14 +50,14 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
       try {
         final remoteTrivia = await getConcreteOrRandom();
         localDataSource.cacheNumberTrivia(remoteTrivia);
-        return Right(remoteTrivia);
+        return Right(mapper.toEntity(remoteTrivia));
       } on ServerException {
         return Left(ServerFailure());
       }
     } else {
       try {
         final localTrivia = await localDataSource.getLastNumberTrivia();
-        return Right(localTrivia);
+        return Right(mapper.toEntity(localTrivia));
       } on CacheException {
         return Left(CacheFailure());
       }

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/platform/network_info.dart';
 import 'features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
+import 'features/number_trivia/data/mapper/number_trivia_mapper.dart';
 import 'features/number_trivia/data/repositories/number_trivia_repository_impl.dart';
 import 'features/number_trivia/domain/repositories/number_trivia_repository.dart';
 import 'features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
@@ -35,12 +36,15 @@ Future<void> init() async {
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
+      mapper: sl(),
     ),
   );
   // Data sources
   sl.registerLazySingleton<NumberTriviaRemoteDataSource>(
     () => NumberTriviaRemoteDataSourceImpl(client: sl()),
   );
+  // Mapper
+  sl.registerLazySingleton(() => NumberTriviaMapper());
 
   sl.registerLazySingleton<NumberTriviaLocalDataSource>(
     () => NumberTriviaLocalDataSourceImpl(sharedPreferences: sl()),
