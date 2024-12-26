@@ -22,8 +22,9 @@ Presentation 层：处理与用户界面的交互，如视图更新、页面跳�
 
 ## 参考
 
-https://resocoder.com/tag/flutter/ 这个Flutter TDD Clean Architecture 系列的文章可以看下，
+- https://resocoder.com/tag/flutter/ 这个Flutter TDD Clean Architecture 系列的文章可以看下，
 受益匪浅，思想性的东西通用性很强。
+- 整洁架构在前端的设计思想与应用实践：https://cloud.tencent.com/developer/article/2324905
 
 ## feature
 
