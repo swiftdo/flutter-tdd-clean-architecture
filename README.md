@@ -15,6 +15,11 @@ Presentation 层：处理与用户界面的交互，如视图更新、页面跳�
 - [ ] 图片资源管理
 - [ ] 国际化
 
+## 参考
+
+https://resocoder.com/tag/flutter/ 这个Flutter TDD Clean Architecture 系列的文章可以看下，
+受益匪浅，思想性的东西通用性很强。
+
 ## feature
 
 应用程序的每个“功能”，例如获取有关数字的一些有趣的琐事，都将分为 3 层 -表示层、领域层和数据层。我们正在构建的应用程序将只有一项功能。
