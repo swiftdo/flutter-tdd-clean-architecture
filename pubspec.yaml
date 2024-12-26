@@ -12,10 +12,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   get_it: ^8.0.3
   dartz: ^0.10.1
-  http: ^1.2.2
-  shared_preferences: ^2.3.4
   equatable: ^2.0.7
-  internet_connection_checker: ^3.0.1
 
   core:
     path: packages/core

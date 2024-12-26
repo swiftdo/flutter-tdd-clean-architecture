@@ -6,3 +6,4 @@ export 'platform/network_info.dart';
 export 'usecases/usecase.dart';
 export 'util/input_converter.dart';
 export 'di/di.dart';
+export 'injection_container.dart';

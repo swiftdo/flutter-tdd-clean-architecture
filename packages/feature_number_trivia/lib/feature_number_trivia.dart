@@ -9,3 +9,4 @@ export 'domain/repositories/number_trivia_repository.dart';
 export 'domain/usecases/get_concrete_number_trivia.dart';
 export 'domain/usecases/get_random_number_trivia.dart';
 export 'presentation/bloc/number_trivia_bloc.dart';
+export 'injection_container.dart';
